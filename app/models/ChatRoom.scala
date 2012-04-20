@@ -57,6 +57,7 @@ object ChatRoom {
               case "talk" => default ! Talk(username, (json \ "text").as[String],  (json \ "room").as[String] )
               case "join" => default ! Enter(username, (json \ "room").as[String] )
               case "quit" => default ! Leave(username, (json \ "room").as[String] )
+              case "list" => default ! List(username)
               case _ => Logger.info("SocketE:" + json)
           }
 
@@ -130,6 +131,25 @@ class ChatRoom extends Actor {
 
     }
 
+    case List(username) => {
+
+      val msg = JsObject(
+        Seq(
+          "kind" -> JsString("list"),
+          "members" -> JsObject(
+            members.map { case (n,member) => 
+              n -> JsArray(member.rooms.map(JsString))
+            }.toSeq
+        )
+      ))
+      members.foreach { case (name,member) => {
+          if(name ==  username) member.connect.push(msg)
+        }
+      }
+
+    }
+
+
   }
 
   def talk(kind: String, user: String, room: String, text: String) {
@@ -200,6 +220,14 @@ class ChatRoom extends Actor {
     def removeUser(username: String, room: String) = {
       members = members.map { case (k,member) =>
         if (k == username && member.rooms.contains(room)) {
+
+        member.connect.push(JsObject(Seq(
+          "kind" -> JsString("quit"),
+          "user" -> JsString(username),
+          "room" -> JsString(room)
+        )))
+
+
           ( k -> Member(member.username, member.connect, member.rooms diff Seq(room) ) )
         } else {
           ( k -> member )
@@ -210,6 +238,7 @@ class ChatRoom extends Actor {
   }
 }
 
+case class List(username: String)
 case class Join(username: String)
 case class Quit(username: String)
 case class Talk(username: String, text: String, room: String)
