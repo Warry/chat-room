@@ -1,0 +1,23 @@
+Démarrer:
+
+sudo sh start
+
+
+API :
+
+Se connecter sur ws://server:9000/username
+où username est le pseudo
+
+Envoyer des messages :
+
+joindre un Chan:
+  { kind: "join", room: "Chan" }
+
+quitter un Chan:
+  { kind: "quit", room: "Chan" }
+
+parler:
+  { kind: "talk", room: "Chan", text: "Lorem ipsum" }
+
+
+
