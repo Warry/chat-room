@@ -13,13 +13,12 @@ import akka.util.duration._
 
 object Application extends Controller {
 
-  /**
-   * Handles the chat websocket.
-   */
-  def chat(username: String) = WebSocket.async[JsValue] { request  =>
-
-    ChatRoom.join(username)
-    
+  def index = Action { implicit request =>
+    Ok(views.html.index())
   }
-  
+
+  def chat(username: String) = WebSocket.async[JsValue] { request  =>
+    ChatRoom.join(username)
+  }
+
 }
