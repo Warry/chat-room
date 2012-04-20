@@ -19,5 +19,6 @@ quitter un Chan:
 parler:
   { kind: "talk", room: "Chan", text: "Lorem ipsum" }
 
-
+lister les users et les rooms:
+  { kind: "list" }
 
