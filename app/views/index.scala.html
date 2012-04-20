@@ -1,0 +1,12 @@
+@()(implicit request: RequestHeader)
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chat</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	</head>
+	<body>
+    connect: @routes.Application.chat("username").webSocketURL()
+	</body>
+</html>
