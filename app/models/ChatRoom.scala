@@ -101,6 +101,7 @@ class ChatRoom extends Actor {
     case NotifyJoin(username) => {
       Logger.info("join: " + username)
       notifyAll("connect", username)
+      notifyRoom("join", username, "home")
     }
 
     case Talk(username, text, room) => {
